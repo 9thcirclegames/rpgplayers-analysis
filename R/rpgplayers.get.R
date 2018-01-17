@@ -1,12 +1,12 @@
 ######################
 # REQUIREMENTS       #
 ######################
-if(FALSE %in% 
-   do.call(c,lapply(c("tidyverse", "lubridate", "rvest"), function(pkg){
-     if(! require(pkg, character.only = TRUE)) install.packages(pkg, depend = TRUE)
-     library(pkg, character.only = TRUE, logical.return = TRUE, quietly = TRUE, warn.conflicts = FALSE)
-   }))
-) stop("Cannot resolve some dependencies; exiting now...")
+if (!require("pacman")) install.packages("pacman"); invisible(library(pacman))
+tryCatch({
+  p_load("tidyverse", "lubridate", "rvest")
+}, warning=function(w){
+  stop(conditionMessage(w))
+})
 
 gdrplayers.get.page <- function(page, verbose = TRUE){
   
@@ -14,7 +14,7 @@ gdrplayers.get.page <- function(page, verbose = TRUE){
   
   page1 <- do.call(plyr::rbind.fill, lapply(gdrplayers.posts.links, function(x){
     
-    post.df = tryCatch({
+    post.df <- tryCatch({
 
     page <- read_html(x)
     
